@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -85,6 +86,35 @@ public class GdpController
         GDP rtnGdp = gdpList.get(gdpList.size() / 2);
 
         return new ResponseEntity<>(rtnGdp, HttpStatus.OK);
+    }
+
+    // /economy/greatest/{GDP} - display a table listing all countries in GDP order who have a GDP greater than or equal to the given GDP
+    @GetMapping(value="/economy/greatest/{GDP}")
+    public ModelAndView getCountriesTableGreaterThanGDP(@PathVariable long GDP)
+    {
+        logger.info("processing request for endpoint \"economy/greatest/" + GDP + "\"");
+        ArrayList<GDP> gdpList = SprintApplication.data.findAll(g -> g.getValue() >= GDP);
+
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("dataTable");
+        mv.addObject("gdpList", gdpList);
+
+        return mv;
+    }
+
+    // /economy/table - display a table list all countries sorted from most to least GDP
+    @GetMapping(value="/economy/table")
+    public ModelAndView getCountriesTableGreaterThanGDP()
+    {
+        logger.info("processing request for endpoint \"economy/table\"");
+        ArrayList<GDP> gdpList = SprintApplication.data.gdpList;
+        gdpList.sort(Comparator.comparingLong(GDP::getValue).reversed());
+
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("dataTable");
+        mv.addObject("gdpList", gdpList);
+
+        return mv;
     }
 
 }
