@@ -117,4 +117,21 @@ public class GdpController
         return mv;
     }
 
+    // STRETCHHHH
+
+    @GetMapping(value="/total")
+    public ResponseEntity<?> getTotalGdpOfCountries()
+    {
+        logger.info("processing request for endpoint \"/total\"");
+        ArrayList<GDP> gdpList = SprintApplication.data.gdpList;
+        long total = 0;
+        for (GDP g: gdpList) {
+            total += g.getValue();
+        }
+
+        return new ResponseEntity<>(new GDP("Total", total), HttpStatus.OK);
+    }
+
+
+
 }
